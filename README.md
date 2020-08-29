@@ -1,12 +1,9 @@
 # facechanger_django
  A face change app based on Django.
  
- <img
-src=“images/SubPronouns.jpg”
-raw=true
-alt=“Subject Pronouns”
-style=“width:500px”
-/>
+<img src="./static/image.png" style="width:480px">
+
+
 
 
 
