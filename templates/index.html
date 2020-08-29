@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>FaceChanger</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+          rel="stylesheet">
+
+</head>
+
+<body >
+<style>
+    body {
+        margin-top: 0px;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .active {
+        background-color: #FFC107;
+        color: white;
+    }
+
+    #capture {
+        display: none;
+    }
+    #snapshot{
+        display: none;
+    }
+</style>
+<div class="mx-auto mt-3" style="width: 830px;height: 640px;">
+    <div class="container main-box">
+        <h2></h2>
+        <div class="row form-group">
+            <div class="col-12 mx-auto">
+                <ul class="nav nav-pills setup-panel text-center">
+                    <li class="card active mx-2 p-2 shadow-sm" style="width: 150px;cursor: default"><a href="#step-1"
+                                                                                                       class="text-dark"
+                                                                                                       style="text-decoration: none">
+                        <h4 class="list-group-item-heading my-auto">Step 1</h4>
+                        <p class="list-group-item-text my-auto">Image selection</p>
+                    </a></li>
+                    <li class="card disabled mx-2 p-2 shadow-sm" style="width: 150px;cursor: default"><a
+                            class="text-dark"
+                            style="text-decoration: none">
+                        <h4 class="list-group-item-heading my-auto">Step 2</h4>
+                        <p class="list-group-item-text my-auto">Face Detection</p>
+                    </a></li>
+                    <li class="card disabled mx-2 p-2 shadow-sm" style="width: 150px;cursor: default"><a
+                            class="text-dark"
+                            style="text-decoration: none">
+                        <h4 class="list-group-item-heading my-auto">Step 3</h4>
+                        <p class="list-group-item-text my-auto">Face Change</p>
+                    </a></li>
+                    <li class="card disabled mx-2 p-2 shadow-sm" style="width: 150px;cursor: default"><a
+                            class="text-dark"
+                            style="text-decoration: none">
+                        <h4 class="list-group-item-heading my-auto">Step 4</h4>
+                        <p class="list-group-item-text my-auto">Download Image</p>
+                    </a></li>
+                    <li class="card disabled mx-2 p-2 shadow-sm my-auto" style="width: 100px">
+                        <a href="{% url 'restart' %}"
+                           class="list-group-item-heading my-auto h5 text-dark"
+                           style="text-decoration: none">Restart</a>
+                        <p class="list-group-item-text my-auto"></p></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="width: 800px;margin-left: 0px">
+
+        <div class="row setup-content mb-3" id="step-1">
+            <div class="col-12 row">
+                <div class="col-5 offset-1 well text-center">
+                    <div class="card p-2 mt-3" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">How it works ?</h5>
+                            <p class="card-text text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit.Ad
+                                amet animi architecto deserunt distinctio inventore.</p>
+                            <a href="#" class="card-link">Contact</a>
+                            <a href="#" class="card-link">Github</a>
+                        </div>
+                    </div>
+                    <div class="card p-2 mt-3" style="width: 18rem;height: 250px">
+                        <div class="card-body">
+                            <h5 class="card-title">Or... take a shoot from WebCam</h5>
+                            <div class="button-group">
+                                <button id="btn-start" type="button" class="btn btn-primary btn-sm my-1">Start
+                                    Streaming
+                                </button>
+                                <button id="btn-stop" type="button" class="btn btn-primary btn-sm my-1">Stop Streaming
+                                </button>
+                                <button id="btn-capture" type="button" class="btn btn-primary btn-sm my-1">Capture
+                                    Image
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 well text-center">
+                    <form method="POST" class="mx-auto" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group card mt-3 p-2" style="height: 230px">
+                            <h5 class="card-title mt-3">Image upload</h5>
+                            <input type="file" name="myfile" class="form-control-file mt-2 p-3"
+                                   id="exampleFormControlFile1">
+                            <button type="submit" class="btn btn-primary mt-4 m-3 mx-auto" style="width: 160px">
+                                Detect Faces
+                            </button>
+                        </div>
+
+                    </form>
+                    <div class="card p-2 " style="height: 250px;">
+                        <div class="card-body d-flex align-items-center mx-auto">
+                            <div class="play-area">
+                                <div class="play-area-sub">
+                                    <video id="stream" width="320" height="240"></video>
+                                </div>
+                                <div class="play-area-sub" style="position: relative;top: 0px">
+                                    <canvas id="capture" width="320" height="240">
+
+                                        <!-- <svg width="1.3em" height="1.3em" viewBox="0 0 16 16" class="bi bi-camera-video-off"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1.075 3.196A2.159 2.159 0 0 0 .5 4.666v6.667c0 1.197.97 2.167 2.167 2.167h6.666c.568 0 1.084-.218 1.47-.575l-.708-.708c-.204.176-.47.283-.762.283H2.667A1.167 1.167 0 0 1 1.5 11.333V4.667c0-.292.107-.558.283-.762l-.708-.709zM10.5 8.379V4.667c0-.645-.522-1.167-1.167-1.167H5.621l-1-1h4.712c1.094 0 1.998.81 2.146 1.862l2.037-1.182c.859-.498 1.984.095 1.984 1.128v7.384c0 .482-.245.869-.594 1.093l-.79-.79a.317.317 0 0 0 .384-.303V4.308a.318.318 0 0 0-.482-.263L11.5 5.505V9.38l-1-1z"/>
+                                        <path fill-rule="evenodd" d="M13.646 14.354l-12-12 .708-.708 12 12-.708.707z"/>
+                                    </svg> -->
+                                    </canvas>
+                                </div>
+                                <div id="snapshot"></div>
+
+                                <div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+        crossorigin="anonymous"></script>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        var url = 'http://127.0.0.1:5001/GUI-is-still-open';
+        fetch(url, {mode: 'no-cors'});
+        setInterval(function () {
+            fetch(url, {mode: 'no-cors'});
+        }, 5000)();
+
+    });
+    // The buttons to start & stop stream and to capture the image
+    var btnStart = document.getElementById("btn-start");
+    var btnStop = document.getElementById("btn-stop");
+    var btnCapture = document.getElementById("btn-capture");
+
+    // The stream & capture
+    var stream = document.getElementById("stream");
+    var capture = document.getElementById("capture");
+    var snapshot = document.getElementById("snapshot");
+
+    // The video stream
+    var cameraStream = null;
+
+    // Attach listeners
+    btnStart.addEventListener("click", startStreaming);
+    btnStop.addEventListener("click", stopStreaming);
+    btnCapture.addEventListener("click", captureSnapshot);
+
+    // Start Streaming
+    function startStreaming() {
+
+        var mediaSupport = 'mediaDevices' in navigator;
+
+        if (mediaSupport && null == cameraStream) {
+
+            navigator.mediaDevices.getUserMedia({video: true})
+                .then(function (mediaStream) {
+
+                    cameraStream = mediaStream;
+
+                    stream.srcObject = mediaStream;
+
+                    stream.play();
+                })
+                .catch(function (err) {
+
+                    console.log("Unable to access camera: " + err);
+                });
+        } else {
+
+            alert('Your browser does not support media devices.');
+
+            return;
+        }
+
+    }
+
+    // Stop Streaming
+    function stopStreaming() {
+
+        if (null != cameraStream) {
+
+            var track = cameraStream.getTracks()[0];
+
+            track.stop();
+            stream.load();
+
+            cameraStream = null;
+        }
+    }
+
+    function captureSnapshot() {
+
+        if (null != cameraStream) {
+
+            var ctx = capture.getContext('2d');
+            var img = new Image();
+
+            ctx.drawImage(stream, 0, 0, capture.width, capture.height);
+
+            img.src = capture.toDataURL('image/jpeg');
+            img.width = 240;
+
+            //snapshot.innerHTML = '';
+
+            //snapshot.appendChild(img);
+            download(capture.toDataURL('image/jpeg'), "test.jpeg", "image/jpeg");
+
+
+        }
+    }
+
+
+</script>
+</body>
+
+</html>

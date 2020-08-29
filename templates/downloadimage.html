@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>FaceChanger</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+            integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+            crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap"
+          rel="stylesheet">
+
+</head>
+
+<body>
+<style>
+    body {
+        margin-top: 0px;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    .active {
+        background-color: #FFC107;
+        color: white;
+    }
+</style>
+<div class="mx-auto mt-3" style="width: 830px;height: 640px;">
+    <div class="container main-box">
+        <h2></h2>
+        <div class="row form-group">
+            <div class="col-12 mx-auto">
+                <ul class="nav nav-pills setup-panel text-center">
+                    <li class="card disabled mx-2 p-2 shadow-sm" style="width: 150px;cursor: default"><a
+                            class="text-dark"
+                            style="text-decoration: none">
+                        <h4 class="list-group-item-heading my-auto">Step 1</h4>
+                        <p class="list-group-item-text my-auto">Image selection</p>
+                    </a></li>
+                    <li class="card  disabled mx-2 p-2 shadow-sm" style="width: 150px;cursor: default"><a
+                            class="text-dark"
+                            style="text-decoration: none">
+                        <h4 class="list-group-item-heading my-auto">Step 2</h4>
+                        <p class="list-group-item-text my-auto">Face Detection</p>
+                    </a></li>
+                    <li class="card disabled mx-2 p-2 shadow-sm" style="width: 150px;cursor: default"><a
+                            class="text-dark"
+                            style="text-decoration: none">
+                        <h4 class="list-group-item-heading my-auto">Step 3</h4>
+                        <p class="list-group-item-text my-auto">Face Change</p>
+                    </a></li>
+                    <li class="card active mx-2 p-2 shadow-sm" style="width: 150px;cursor: default"><a
+                            class="text-dark"
+                            style="text-decoration: none">
+                        <h4 class="list-group-item-heading my-auto">Step 4</h4>
+                        <p class="list-group-item-text my-auto">Download Image</p>
+                    </a></li>
+                    <li class="card disabled mx-2 p-2 shadow-sm my-auto" style="width: 100px">
+                        <a href="{% url 'restart' %}"
+                           class="list-group-item-heading my-auto h5 text-dark"
+                           style="text-decoration: none">Restart</a>
+                        <p class="list-group-item-text my-auto"></p></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <style>
+        img.Image {
+            max-width: 100%;
+            display: block;
+        }
+
+        div#ImageContainer {
+            width: 300px;
+        }
+    </style>
+    <div class="container" style="width: 800px;margin-left: 0px">
+
+        <div class="row setup-content mb-3" id="step-1">
+            <div class="col-12 " style="height: 650px">
+                <h6 class="d-flex justify-content-center mb-2">Final result:</h6>
+                <div class="d-flex justify-content-center">
+
+                    <img src="../media/{{ face }}" style="width: 300px">
+
+                </div>
+                <div class="d-flex justify-content-around">
+
+                    <div>
+                        <a download="result.jpeg" href="../media/{{ face }}" class="btn btn-primary my-4 text-white" style="width: 200px;display: block;
+  margin-left: auto;
+  margin-right: auto;">
+                            <img src="../media/{{ face }}" style="display: none">
+                            Download image as JPEG
+                        </a>
+                    </div>
+
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"
+        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
+        crossorigin="anonymous"></script>
+<script>
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("demo");
+    output.innerHTML = slider.value; // Display the default slider value
+
+    // Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function () {
+        output.innerHTML = this.value;
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+
+        var url = 'http://127.0.0.1:5001/GUI-is-still-open';
+        fetch(url, {mode: 'no-cors'});
+        setInterval(function () {
+            fetch(url, {mode: 'no-cors'});
+        }, 5000)();
+
+    });
+
+    var btnCapture = document.getElementById("btn-capture");
+
+    btnCapture.addEventListener("click", captureSnapshot);
+
+     function captureSnapshot() {
+
+            if (null != cameraStream) {
+
+                var ctx = capture.getContext('2d');
+                var img = new Image();
+
+                ctx.drawImage(stream, 0, 0, capture.width, capture.height);
+
+                img.src = capture.toDataURL('image/jpeg');
+                img.width = 240;
+
+                //snapshot.innerHTML = '';
+
+                //snapshot.appendChild(img);
+                download(capture.toDataURL('image/jpeg'), "test.jpeg", "image/jpeg");
+
+
+            }
+        }
+
+</script>
+
+</body>
+
+</html>
